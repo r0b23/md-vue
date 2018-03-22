@@ -1,0 +1,11 @@
+USER: {
+  "id": MongoDB Object ID,
+  "firstname": String,
+  "lastname": String,
+  "email": String,
+  "phoneNumber": String,
+  "birthdate": Date (YYYY-MM-DD),
+  "enabled": boolean (törölve van-e a user),
+  "orvosi": Date (YYYY-MM-DD),
+  "student": boolean (diák/efo)
+}
