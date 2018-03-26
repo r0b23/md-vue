@@ -6,7 +6,7 @@
     <td class="sorting">
       <router-link :to="userLink(user.id)">{{ username }}</router-link>
     </td>
-    <td>{{ user.birthdate }}</td>
+    <td>{{ userBirthdate }}</td>
     <td>
       <span class="user-contact"><b>Email: </b>{{ user.email }}<br></span>
       <span class="user-contact"><b>Telefonszám: </b>{{ user.phoneNumber }}</span>
@@ -50,7 +50,7 @@
 </template>
 <script>
 import PageContextMenu from './PageContextMenu'
-
+import moment from 'moment'
 export default {
   props: {
     user: {
@@ -65,12 +65,15 @@ export default {
   computed: {
     username () {
       return `${this.user.lastname} ${this.user.firstname}`
+    },
+    userBirthdate () {
+      return moment(this.user.birthdate).format('LL')
     }
   },
   methods: {
     addUserToProject (projectId, userId) {
       const body = null
-      this.$http.post(`http://localhost:9090/user/addtoprojectasworker/${userId}/${projectId}`, body)
+      this.$http.post(`user/addtoprojectasworker/${userId}/${projectId}`, body)
         .then(response => response.json())
         .then((user) => {
           this.$store.commit('UPDATE_USER', user)

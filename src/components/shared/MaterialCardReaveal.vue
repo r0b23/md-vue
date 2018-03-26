@@ -1,39 +1,23 @@
 <template>
-  <div class="col s4">
+  <div class="col" :class="cardClass">
     <div class="card" :style="overflow">
-      <div class="card-image waves-effect waves-block waves-light">
+      <div class="card-image waves-effect waves-block waves-light user-profile-background">
+        <!-- src-t berakni propertiesbe -->
+        <img class="activator" src="../../assets/user-profile-bg.png">
+      </div>
+      <div class="usertype">
+        <slot name="usertype"></slot>
       </div>
       <div class="card-content">
-        <a class="btn-floating waves-effect waves-light blue lighten-1 right relative-btn">
-          <i class="material-icons right" @click="revealInfo()">info</i>
+        <a class="btn-floating waves-effect waves-light blue lighten-1 right">
+          <i class="material-icons right" @click="revealInfo()">{{ icon }}</i>
         </a>
-        <span class="card-title activator grey-text text-darken-4">Suli host
-        </span>
-        <p><a href="#">This is a link</a></p>
+        <slot name="info"></slot>
       </div>
       <transition name="reveal" @enter="enterReveal" @leave="leaveReveal">
         <div class="card-reveal" v-if="showInfo">
-          <span class="card-title grey-text text-darken-4">Suli host
-          <i class="material-icons right" @click="hideInfo">close</i></span>
-          <p>
-            Here is some more information about this company. As a creative studio we believe no client is too big nor too small to work with us to obtain good advantage.By combining the creativity of artists with the precision of engineers we develop custom solutions that achieve results.Some more information about this company.
-          </p>
-          <p>
-            <i class="small material-icons left blue-text text-lighten-1">person_outline</i>
-            Pályi Zsolt
-          </p>
-          <p>
-            <i class="small material-icons left blue-text text-lighten-1">business</i>
-            6710, Szeged Kökörcsin utca 9.
-          </p>
-          <p>
-            <i class="small material-icons left blue-text text-lighten-1">perm_phone_msg</i>
-            +36308121602
-          </p>
-          <p>
-            <i class="small material-icons left blue-text text-lighten-1">mail</i>
-            rbert.kasza@gmail.com
-          </p>
+          <i class="material-icons right close" @click="hideInfo">close</i>
+          <slot name="reveal"></slot>
         </div>
       </transition>
     </div>
@@ -50,6 +34,18 @@ export default {
         overflow: 'hidden'
       }
     }
+  },
+  props: {
+    icon: {
+      required: true,
+      type: String
+    },
+    cardClass: {
+      required: true,
+      type: Object
+    }
+  },
+  computed: {
   },
   methods: {
     revealInfo () {
@@ -94,4 +90,31 @@ export default {
     top: -48px;
     right: -10px;
   }
+  .user-profile-background {
+    height: 250px;
+  }
+  .material-icons.close {
+    cursor: pointer;
+  }
+  div.usertype {
+    position: relative;
+    height: 0;
+  }
+  span.circle.usertype{
+    color: white;
+    background: linear-gradient(45deg, #0288d1 0%, #26c6da 100%);
+    border-radius: 50%;
+    width: 85px;
+    height: 85px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    position: absolute;
+    left: 2em;
+    top: -45px;
+    z-index: 1;
+}
 </style>

@@ -4,7 +4,7 @@
       <error-alert :hasError="submitError" :errorMessage="errorMessage"/>
       <form class="col s12" @submit.prevent="onSubmitEmployee">
         <mat-input
-          v-model="newEmployee.lastname"
+          v-model="employee.lastname"
           :inputWrapper="{s6: true}"
           :type="'text'"
           :label="'Vezetéknév'"
@@ -12,7 +12,7 @@
           v-validate="validations.name"
         />
         <mat-input
-          v-model="newEmployee.firstname"
+          v-model="employee.firstname"
           :inputWrapper="{s6: true}"
           :type="'text'"
           :label="'Keresztnév'"
@@ -20,7 +20,8 @@
           v-validate="validations.name"
         />
         <mat-input
-          v-model="newEmployee.email"
+          :disabled="editing"
+          v-model="employee.email"
           :inputWrapper="{s6: true}"
           :type="'email'"
           :label="'Email'"
@@ -29,7 +30,7 @@
           v-validate="validations.email"
         />
         <mat-input
-          v-model="newEmployee.phoneNumber"
+          v-model="employee.phoneNumber"
           :inputWrapper="{s6: true}"
           :type="'text'"
           :label="'Telefonszám'"
@@ -43,15 +44,14 @@
         </mat-input>
         <mat-input
           v-if="!editing"
-          v-model="newEmployee.password"
+          v-model="employee.password"
           :inputWrapper="{s12: true}"
           :type="'password'"
           :label="'Jelszó'"
           :name="'password'"
         />
         <mat-select
-          v-if="!editing"
-          v-model="newEmployee.authority"
+          v-model="employee.authority"
           :inputWrapper="{s12: true}"
           :options="selectOptions"
           :name="'userRole'"
@@ -59,19 +59,26 @@
         />
         <mat-radio-button
           :id="'userType'"
-          v-model="newEmployee.student"
+          v-model="employee.student"
           :inline="true"
           :buttons="radioOption"
           :name="'hoho'"
         />
         <mat-date-picker
+          :disabled="editing"
           :inputWrapper="{s12: true}"
           :id="'datepicker'"
           :label="'Születési Dátum'"
-          v-model="newEmployee.birthdate"
+          v-model="employee.birthdate"
           v-validate="'required'"
         />
         <p class="right-align col s12">
+          <button
+            type="button"
+            class="waves-effect waves-light btn center-align red"
+            @click="closeModal">
+            Mégse
+          </button>
           <button
             type="submit"
             class="waves-effect waves-light btn center-align"
@@ -79,12 +86,7 @@
             :disabled="isFormValid">
             Munkavállaló mentése
           </button>
-          <button
-            type="button"
-            class="waves-effect waves-light btn center-align red"
-            @click="closeModal">
-            Mégse
-          </button>
+
         </p>
       </form>
     </div>
@@ -96,6 +98,7 @@ import MatSelect from '../../shared/forms/MaterialSelect'
 import MatRadioButton from '../../shared/forms/MaterialRadioButton'
 import MatDatePicker from '../../shared/forms/MatDatepicker'
 import ErrorAlert from '../../shared/ErrorAlert'
+import UserResource from '../../../resources/UserResource.js'
 
 export default {
   data () {
@@ -113,7 +116,7 @@ export default {
           // regex: /^\+[0-9]{1}[0-9]{10,11}$/
         }
       },
-      newEmployee: {
+      employee: {
         lastname: '',
         firstname: '',
         email: '',
@@ -156,20 +159,21 @@ export default {
   },
   methods: {
     onSubmitEmployee () {
+      console.log(UserResource.userRequestBody(this.employee))
       let body = {
-        lastname: this.newEmployee.lastname,
-        firstname: this.newEmployee.firstname,
-        email: this.newEmployee.email,
-        password: 'this.newEmployee.password',
-        authority: /* this.newEmployee.authority */ 2,
-        student: this.newEmployee.student,
-        phonenumber: this.newEmployee.phoneNumber,
-        birthdate: this.newEmployee.birthdate
+        lastname: this.employee.lastname,
+        firstname: this.employee.firstname,
+        email: this.employee.email,
+        authority: this.employee.authority,
+        student: this.employee.student,
+        phoneNumber: this.employee.phoneNumber,
+        birthdate: this.employee.birthdate
       }
       if (this.editing) {
-        body.id = this.newEmployee.id
+        body.id = this.employee.id
         this.$store.dispatch('updateUser', body)
       } else {
+        body.password = this.employee.password
         this.$store.dispatch('addUser', body)
       }
     },
@@ -180,7 +184,7 @@ export default {
   created () {
     const modalModel = this.$store.getters.model
     if (modalModel) {
-      this.newEmployee = modalModel
+      this.employee = modalModel
     }
   },
   components: {

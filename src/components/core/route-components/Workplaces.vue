@@ -2,9 +2,9 @@
   <div class="content-wrapper">
     <div class="row">
       <h1>Workplaces route</h1>
+      <!-- <card-reavel></card-reavel>
       <card-reavel></card-reavel>
-      <card-reavel></card-reavel>
-      <card-reavel></card-reavel>
+      <card-reavel></card-reavel> -->
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://localhost:9090/project/all').then(response => response.json())
+    this.$http.get('project/all').then(response => response.json())
       .then((projects) => {
         this.projects = projects
       })

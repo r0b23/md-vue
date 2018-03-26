@@ -183,7 +183,7 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://localhost:9090/project/all/')
+    this.$http.get('project/all/')
       .then(response => response.json())
       .then((data) => {
         this.projects = data

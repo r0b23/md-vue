@@ -14,6 +14,7 @@
       @leave="leaveFadeIn">
       <material-modal v-show="modalOpen"></material-modal>
     </transition>
+    <response-popup/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import Sidebar from './components/core/sidebar/Sidebar'
 import Loader from './components/core/Loader'
 import auth from './auth/auth'
 import MaterialModal from './components/shared/MaterialModal'
+import ResponsePopup from './components/shared/ResponsePopup'
 
 export default {
   name: 'App',
@@ -70,7 +72,8 @@ export default {
     appHeader: Header,
     appSidebar: Sidebar,
     spinnerLoader: Loader,
-    materialModal: MaterialModal
+    materialModal: MaterialModal,
+    responsePopup: ResponsePopup
   }
 }
 </script>

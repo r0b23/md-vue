@@ -119,7 +119,7 @@ export default {
     },
     loadUsers (event, type) {
       const target = event.target
-      document.querySelectorAll('.tabs .tab a.active')[0].classList.remove('active')
+      // document.querySelectorAll('.tabs .tab a.active')[0].classList.remove('active')
       target.classList.add('active')
       this.$store.dispatch('fetchUsers', type)
     },
@@ -135,7 +135,7 @@ export default {
         student
       }
       for (let i = 0; i < this.amount; i++) {
-        this.$http.post('http://localhost:9090/user/insert', user).then(response => response.json())
+        this.$http.post('user/insert', user).then(response => response.json())
           .then(data => {
             console.log(data)
           })

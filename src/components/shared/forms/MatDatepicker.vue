@@ -1,6 +1,6 @@
 <template>
   <div class="mat-datepicker-wrapper input-field col" :class="inputWrapper">
-    <label :for="id" class="active">{{ label }}</label>
+    <label :for="id" class="datepicker-label" :class="{ active: value }">{{ label }}</label>
     <transition name="datepicker">
       <div class="mat-picker-wrapper" v-if="showPicker" @click.self="hidePicker($event)" >
         <div class="mat-picker z-depth-4" >
@@ -419,5 +419,9 @@ export default {
 .datepicker-leave-active .mat-picker {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+.input-field.col .datepicker-label {
+  transform: translateY(-14px) scale(0.8);
+  transform-origin: 0 0;
 }
 </style>

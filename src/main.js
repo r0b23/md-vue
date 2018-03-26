@@ -11,6 +11,8 @@ import store from './store/index'
 import 'materialize-css'
 
 Vue.use(VueResource)
+
+Vue.http.options.root = 'http://localhost:9090/'
 Vue.http.interceptors.push((request, next) => {
   // console.log(request)
   if (auth.isLoggedIn()) {
@@ -27,7 +29,7 @@ Vue.http.interceptors.push((request, next) => {
 router.beforeEach((to, from, next) => {
   if (to.path !== '/bejelentkezes') {
     if (!auth.isLoggedIn() && from.path !== '/login') {
-      store.dispatch('logout')
+      store.commit('logout')
       next('/bejelentkezes')
     } else if (from.path === '/bejelentkezes' && !auth.isLoggedIn()) {
       next(false)

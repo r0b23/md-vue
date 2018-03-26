@@ -75,5 +75,6 @@ export default {
   }
   div.input-field p.inline-radio-wrapper {
     margin-bottom: 2em;
+    margin-top: -20px;
   }
 </style>

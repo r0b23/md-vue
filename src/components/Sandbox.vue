@@ -1,51 +1,46 @@
 <template>
   <div>
-    <!-- <transition name="slideFromLeft">
-      <div class="card-panel green response-popup" v-if="show">
-        <div class="card-cotntent">
-          <span class="card-title white-text darken-1">
-            <i class="material-icons">notifications</i>
-            Új munkavállaló hozzáadva
-          </span>
-          <i class="material-icons white-text close-icon">close</i>
-          <p class="white-text">
-            Új munkavállaló: <router-link class="white-text" :to="'/munkavallalok/5ab2b313df9c2316489fd855'"><b>Rác István</b></router-link>
-          </p>
-        </div>
-      </div>
-    </transition>
-    <button class="waves-effect waves-light btn" @click="show = !show">Show me</button> -->
-    <div style="position:relative">
-      <button class="waves-effect waves-light btn center-align" :class="{ loading: isActive }" @click="toggle">
-        <span v-if="true">Munkavállaló mentése</span>
-      </button>
-    </div>
+    <response-popup></response-popup>
+    <button class="waves-effect waves-light btn" @click="openPopup(true)">Show me</button>
   </div>
 </template>
 <script>
-import MaterialTabs from './shared/MaterialTabs/MaterialTabs'
-import DataTable from './shared/tables/UserTable'
-
+import Calendar from './shared/calendar/MonthView'
+import ResponsePopup from './shared/ResponsePopup'
 export default {
   data () {
     return {
-      isActive: false,
-      spinnerColor: {
-        borderColor: 'white'
-      }
+      show: false
+    }
+  },
+  computed: {
+    title () {
+      return 'HEllo'
     }
   },
   methods: {
     toggle () {
-      this.isActive = !this.isActive
+      this.show = !this.show
+    },
+    closePopup () {
+      this.$store.commit('closePopup')
+    },
+    openPopup (isError) {
+      const payload = {
+        showPopup: true,
+        title: 'Új munkválló hozzáadva.',
+        isError,
+        message: 'HOHOHOHOHOHOHHOHOHOH HOHOHOHOHOHOHOH HOHOHOHOHOHOHH adfasdfa asd'
+      }
+      this.$store.commit('openPopup', payload)
     }
   },
   created () {
     this.$store.dispatch('fetchUsers', '')
   },
   components: {
-    materialTabs: MaterialTabs,
-    dataTable: DataTable
+    calendar: Calendar,
+    responsePopup: ResponsePopup
   }
 }
 </script>
@@ -68,6 +63,7 @@ export default {
     position: absolute;
     right: 8px;
     top: 8px;
+    cursor: pointer;
   }
   .slideFromLeft-enter {
     transform: translateX(110%);

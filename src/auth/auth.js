@@ -35,11 +35,11 @@ export default {
   },
   login (body) {
     store.commit('SHOW_LOADER', 'login')
-    Vue.http.post('http://localhost:9090/auth', body).then(response => response.json())
+    Vue.http.post('auth', body).then(response => response.json())
       .then(sleeper(1000))
       .then((data) => {
         this.setToken(data.token)
-        Vue.http.get('http://localhost:9090/user/authenticate').then(response => response.json())
+        Vue.http.get('user/authenticate').then(response => response.json())
           .then((user) => {
             this.saveUserToLocalStorage(user)
             store.commit('SET_USER', user)
@@ -49,6 +49,7 @@ export default {
           })
       })
       .catch(() => {
+        store.commit('HIDE_LOADER')
         store.commit('SET_ERROR',
           {
             message: 'Hibás felhasználónév vagy jelszó!',
