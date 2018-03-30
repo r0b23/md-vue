@@ -7,9 +7,10 @@
     <input
       :type="type"
       class="validate"
-      :class="{ 'invalid': hasError }"
+      :class="{ 'invalid': hasError, 'valid': !hasError && !!value }"
       :value="value"
-      @input="inputValue($event.target.value)"
+      @input="updateValue($event.target.value)"
+      @change="updateValue($event.target.value)"
       @focus="inputIsActive"
       @blur="inputNotActive"
       :disabled="disabled"
@@ -29,6 +30,14 @@
 </template>
 <script>
 export default {
+  $_veeValidate: {
+    name () {
+      return this.name
+    },
+    value () {
+      return this.value
+    }
+  },
   data () {
     return {
       inputActive: false
@@ -44,7 +53,12 @@ export default {
     },
     type: {
       type: String,
-      required: true
+      default: 'text',
+      validator: val => {
+        return (
+          ['url', 'text', 'password', 'email', 'search'].indexOf(val) !== -1
+        )
+      }
     },
     icon: {
       type: String
@@ -78,8 +92,9 @@ export default {
     },
     inputNotActive () {
       this.inputActive = false
+      this.$emit('blur')
     },
-    inputValue (value) {
+    updateValue (value) {
       this.$emit('input', value)
     }
   }

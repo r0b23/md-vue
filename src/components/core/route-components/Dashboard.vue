@@ -4,28 +4,23 @@
       <h3>Todos (ezeket csináld meg elsőnek)</h3>
       <ul>
         <li>
-          Valamiféle loading a form submitokhoz.(gombon belül loader)
-          <br> Storhoz hozzáadni loading modult, ahol tároljuk a loader infokat.
-          Ez után route loading hozzáadása.
+          User update, user hozzáadása projecthez popup(success, error)<br>
+          Success hozzáadáasa kis popupban, amiben van egy link az új felhasználóhoz
         </li>
         <li>
-          User route befejezése, törlés, edit hozzáadása, Munkahelyek hozzáadása a Formhoz
-          <br>Névre kattintva a Profile betöltése
+          Munkahelyek hozzáadása a Formhoz
         </li>
         <li>
-          Success hozzáadáasa kis popupban, ami ben van egy link az új felhasználóhoz
+          Sort befejezése. Egyszerre csak egyet mutasson. Ha null a sort értéke az eredeti, sorrend visszaállítása
+        </li>
+        <li>
+          UserRowban dinamikussá tenni a cellákat. Meglehessen adni
         </li>
       </ul>
       <div style="dsiplay:none">
         <h3>Bugs</h3>
         <ul>
-          <li><h1>unknown action type: logout</h1></li>
-          <li>
-            Választ találni arra, hogy  miért adtam min-heigh-ot a main containernek?(Kivettem a min-heightot)
-            <br>
-            Tudom miért raktam bele. Gomb ugrál amikor átmegyunk másik oldalra(Erre kell találni egy megoldást).
-          </li>
-          <li>Fixed gomb ugrál amikor navigálunk oldalak között</li>
+          <li>fixed action button legyen "fix". Valamit kitalálni arra, hogy ne ugráljon az oldal betöltésénél</li>
         </ul>
       </div>
   </div>

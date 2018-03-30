@@ -112,7 +112,7 @@ export default {
   methods: {
     openModal () {
       const payload = {
-        component: 'newEmployee',
+        component: 'employeeInfoForm',
         header: 'Új munkavállaló mentése'
       }
       this.$store.commit('openModal', payload)

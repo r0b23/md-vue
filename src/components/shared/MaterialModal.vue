@@ -27,7 +27,7 @@
 /*  eslint no-param-reassign:
     ["error", { "props": true, "ignorePropertyModificationsFor": ["el"] }] */
 import Velocity from 'velocity-animate'
-import NewEmployee from '../core/route-components/NewEmployee'
+import EmployeeInfoForm from './ModalComponents/EmployeeInfoForm'
 
 export default {
   computed: {
@@ -85,7 +85,7 @@ export default {
     }
   },
   components: {
-    newEmployee: NewEmployee
+    employeeInfoForm: EmployeeInfoForm
   }
 }
 </script>

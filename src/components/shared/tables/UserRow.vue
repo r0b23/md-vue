@@ -4,7 +4,7 @@
       <span class="user-type">{{ user.student ? 'd' : 'e'}}</span>
     </td>
     <td class="sorting">
-      <router-link :to="userLink(user.id)">{{ username }}</router-link>
+      <router-link :to="userLink(user.id)">{{ user.name }}</router-link>
     </td>
     <td>{{ userBirthdate }}</td>
     <td>
@@ -14,7 +14,7 @@
     <td style="position:relative;">
       <page-context-menu
         :title="`${user.lastname} ${user.firstname}`">
-        <span class="card-title" slot="title">{{ username }}</span>
+        <span class="card-title" slot="title">{{ user.name }}</span>
         <div class="collection pgm-list" slot="content">
           <h5 class="pgm-list-header">Munkahely hozzáadása</h5>
           <a
@@ -26,11 +26,10 @@
           </a>
         </div>
       </page-context-menu>
-      <span>Nincs munkahelye</span>
-      <!-- <span v-if="user.projectAsWorker.length === 0">Nincs munkahelye</span> -->
-      <!-- <span v-for="workplace in user.projectAsWorker" :key="workplace.id">
-        {{ workplace.name }},
-      </span> -->
+      <span v-if="user.projects.length === 0">Nincs munkahelye</span>
+      <span v-for="project in user.projects" :key="project.id">
+        {{ project.name }}<br>
+      </span>
     </td>
     <td>2017-11-05</td>
     <td>
@@ -49,8 +48,9 @@
   </tr>
 </template>
 <script>
-import PageContextMenu from './PageContextMenu'
 import moment from 'moment'
+import PageContextMenu from './PageContextMenu'
+
 export default {
   props: {
     user: {
@@ -63,28 +63,24 @@ export default {
     }
   },
   computed: {
-    username () {
-      return `${this.user.lastname} ${this.user.firstname}`
-    },
     userBirthdate () {
       return moment(this.user.birthdate).format('LL')
     }
   },
   methods: {
     addUserToProject (projectId, userId) {
-      const body = null
-      this.$http.post(`user/addtoprojectasworker/${userId}/${projectId}`, body)
-        .then(response => response.json())
-        .then((user) => {
-          this.$store.commit('UPDATE_USER', user)
-        })
+      const payload = {
+        userId,
+        projectId
+      }
+      this.$store.dispatch('addUserToProject', payload)
     },
     userLink (id) {
       return `munkavallalok/${id}`
     },
     editUser (user) {
       const payload = {
-        component: 'newEmployee',
+        component: 'employeeInfoForm',
         header: `${user.lastname} ${user.firstname} szerkesztése`,
         model: user,
         editing: true

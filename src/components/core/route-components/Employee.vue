@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="row" slot="reveal" v-if="user">
-        <p class="card-title grey-text text-darken-4">{{ user.lastname }} {{user.firstname}}</p>
+        <p class="card-title grey-text text-darken-4">{{ user.name}}</p>
         <p>
           <i class="material-icons cyan-text text-darken-2">perm_phone_msg</i>
           {{user.phoneNumber}}
@@ -73,7 +73,8 @@ export default {
   },
   created () {
     const userId = this.$route.params.id
-    UserResource.populateUser(userId).then(user => {
+    const userResource = UserResource()
+    userResource.populateUser(userId).then(user => {
       this.user = user
     })
   },

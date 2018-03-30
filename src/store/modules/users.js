@@ -24,28 +24,33 @@ const mutations = {
 
 const actions = {
   fetchUsers ({ commit }, userType) {
-    console.log(UserResource)
+    const userResource = UserResource()
     commit('SHOW_LOADER', 'userLoading')
-    UserResource.getUsers({ userType }).then(response => response.json())
+    userResource.getUsers({ userType }).then(response => response.json())
       .then(sleeper(1000)).then(users => {
-        commit('SET_USERS', users)
-        commit('HIDE_LOADER')
+        userResource.populateUsers(users).then(populatedUsers => {
+          commit('SET_USERS', populatedUsers)
+          commit('HIDE_LOADER')
+        })
       }).catch(error => console.log(error))
   },
   addUser ({ commit }, user) {
     commit('SHOW_LOADER', 'newUser')
-    UserResource.saveUser(user).then(response => response.json())
+    const userResource = UserResource()
+    userResource.saveUser(user).then(response => response.json())
       .then(newUser => {
-        commit('HIDE_LOADER')
-        commit('ADD_NEW_USER', newUser)
-        commit('closeModal')
-        const payload = {
-          showPopup: true,
-          title: 'Új munkválló hozzáadva.',
-          isError: false,
-          message: `Új felhasználó: ${newUser.lastname}`
-        }
-        commit('openPopup', payload)
+        userResource.populateUser(newUser.id).then(populatedUser => {
+          commit('HIDE_LOADER')
+          commit('ADD_NEW_USER', populatedUser)
+          commit('closeModal')
+          const payload = {
+            showPopup: true,
+            title: 'Új munkválló hozzáadva.',
+            isError: false,
+            message: `Új felhasználó: ${populatedUser.name}`
+          }
+          commit('openPopup', payload)
+        })
       }).catch(error => {
         const payload = {
           showPopup: true,
@@ -59,23 +64,45 @@ const actions = {
   },
   removeUser ({ commit }, userId) {
     // const deleteUserUrl = `user/remove/${userId}`
-    UserResource.deleteUser({userId}).then(response => response.json())
+    const userResource = UserResource()
+    userResource.deleteUser({ userId }).then(response => response.json())
       .then(users => {
-        const payload = {
-          showPopup: true,
-          title: 'Felhasználó törölve.',
-          isError: false,
-          message: ``
-        }
-        commit('SET_USERS', users)
-        commit('openPopup', payload)
+        userResource.populateUsers(users).then(populatedUsers => {
+          const payload = {
+            showPopup: true,
+            title: 'Felhasználó törölve.',
+            isError: false,
+            message: ``
+          }
+          commit('openPopup', payload)
+          commit('SET_USERS', populatedUsers)
+        })
       }).catch(error => console.log(error))
   },
   updateUser ({ commit }, user) {
-    Vue.http.post('user/update', user).then(response => response.json())
+    const userResource = UserResource()
+    userResource.updateUser(user).then(response => response.json())
       .then(updatedUser => {
-        console.log(updatedUser)
+        userResource.populateUser(updatedUser.id).then(populatedUser => {
+          commit('UPDATE_USER', user)
+          commit('closeModal')
+        })
       })
+  },
+  addUserToProject ({ commit }, payload) {
+    const userResource = UserResource()
+    userResource.addUserToProject(payload, null).then(user => {
+      userResource.populateUser(payload.userId).then(populatedUser => {
+        const popupPayload = {
+          showPopup: true,
+          title: 'Sikeres művelet.',
+          isError: false,
+          message: `${populatedUser.name} hozzáadva a ${populatedUser.projects[0].name} projekthez.`
+        }
+        commit('openPopup', popupPayload)
+        commit('UPDATE_USER', populatedUser)
+      }).catch(error => console.log(error)) // hiba kezelés hozzáadáasa
+    })
   }
 }
 

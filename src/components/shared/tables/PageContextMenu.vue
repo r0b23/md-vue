@@ -5,8 +5,7 @@
       :css="false"
       name="slideToggle"
       @enter="enter"
-      @leave="leave"
-      >
+      @leave="leave">
       <div class="card page-context-menu" v-if="show">
         <div class="card-content small-card" :class="cardClasses">
           <slot name="title"></slot>
@@ -75,6 +74,7 @@ export default {
     top: 15px;
     left: -17rem;
     min-width: 230px;
+    min-height: initial;
   }
   .page-context-menu-wrapper .card.page-context-menu .card-content {
     padding: 10px;

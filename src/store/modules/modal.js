@@ -17,7 +17,7 @@ const mutations = {
     state.open = true
     state.modalComponent = payload.component
     state.modalHeader = payload.header
-    state.model = payload.model
+    state.model = { ...payload.model }
     state.showFooter = payload.showFooter
     state.editing = payload.editing
   }

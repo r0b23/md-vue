@@ -2,48 +2,48 @@ import Vue from 'vue'
 import Resource from 'vue-resource'
 
 Vue.use(Resource)
+export default function () {
+  const userActions = {
+    getUsers: { method: 'GET', url: 'user/all/{/userType}' },
+    getUser: { method: 'GET', url: 'user/id/{/userId}' },
+    getUserProjects: { method: 'GET', url: 'user/getprojects/{/userId}' },
+    getUserSchedule: { method: 'GET', url: 'user/getusersnextweekschedule{/userId}' },
+    saveUser: { method: 'POST', url: 'user/insert' },
+    deleteUser: { method: 'DELETE', url: 'user/remove/{/userId}' },
+    updateUser: { method: 'POST', url: 'user/update' },
+    addUserToProject: { method: 'POST', url: 'user/addtoprojectasworker/{/userId}{/projectId}' }
+  }
 
-const userActions = {
-  getUsers: { method: 'GET', url: 'user/all/{/userType}' },
-  getUser: { method: 'GET', url: 'user/id/{/userId}' },
-  getUserProjects: { method: 'GET', url: 'user/getprojects/{/userId}' },
-  getUserSchedule: { method: 'GET', url: 'user/getusersnextweekschedule{/userId}' },
-  saveUser: { method: 'POST', url: 'user/insert' },
-  deleteUser: { method: 'DELETE', url: 'user/remove/{/userId}' }
-}
+  const resource = Vue.resource('', {}, userActions)
 
-function userView (user) {
-  let userView1 = Object.assign({}, user, {
-    name: `${user.lastname} ${user.firstname}`
-  })
-  const { firstname, lastname, ...userView } = userView1
+  function userView (user) {
+    return Object.assign({}, user, {
+      name: `${user.lastname} ${user.firstname}`
+    })
+  }
 
-  return userView
-}
-function userRequestBody (user) {
-  const userName = user.name.split(' ')
-  const requestBody = Object.assign({}, user, {
-    firstname: userName[0],
-    lastname: userName[1]
-  })
-  const { name, ...reqUser } = requestBody
-  return reqUser
-}
+  async function populateUser (userId) {
+    // Találj valami fix megoldást ehhez, valószínű több helyen is kell majd ezt használni
+    const user = await resource.getUser({ userId }).then(response => response.json())
+    const projects = await resource.getUserProjects({ userId }).then(response => response.json())
+    // const schedule = await resource.getUserSchedule({ userId }).then(response => response.json())
 
-async function populateUser (userId) {
-  // Találj valami fix megoldást ehhez, valószínű több helyen is kell majd ezt használni
-  const projects = await resource.getUserProjects({ userId }).then(response => response.json())
-  const user = await resource.getUser({ userId }).then(response => response.json())
-  const schedule = await resource.getUserSchedule({ userId }).then(response => response.json())
-
-  return { ...userView(user), projects, schedule }
-}
-
-const resource = Vue.resource('', {}, userActions)
-
-export default {
-  ...resource,
-  populateUser,
-  userView,
-  userRequestBody
+    return { ...userView(user), projects }
+  }
+  async function populateUsers (users) {
+    return Promise.all(
+      users.map(async user => {
+        const userId = user.id
+        const projects = await resource.getUserProjects({ userId }).then(response => response.json())
+        // const schedule = await resource.getUserSchedule({ userId }).then(response => response.json())
+        return { ...userView(user), projects }
+      })
+    )
+  }
+  return Object.freeze(Object.create({
+    ...resource,
+    populateUser,
+    populateUsers,
+    userView
+  }))
 }

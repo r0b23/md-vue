@@ -6,36 +6,51 @@
         <mat-input
           v-model="employee.lastname"
           :inputWrapper="{s6: true}"
-          :type="'text'"
-          :label="'Vezetéknév'"
-          :name="'lastname'"
-          v-validate="validations.name"
-        />
+          label="Vezetéknév"
+          name="lastname"
+          :hasError="errors.has('lastname')"
+          v-validate="'required'">
+          <span
+            class="error"
+            v-if="errors.has('lastname')">
+              {{ errors.first('lastname') }}
+          </span>
+        </mat-input>
         <mat-input
           v-model="employee.firstname"
           :inputWrapper="{s6: true}"
-          :type="'text'"
-          :label="'Keresztnév'"
-          :name="'firstname'"
-          v-validate="validations.name"
-        />
+          label="Keresztnév"
+          name="firstname"
+          :hasError="errors.has('firstname')"
+          v-validate="'required'">
+          <span
+            class="error"
+            v-if="errors.has('firstname')">
+              {{ errors.first('firstname') }}
+          </span>
+        </mat-input>
         <mat-input
           :disabled="editing"
           v-model="employee.email"
           :inputWrapper="{s6: true}"
-          :type="'email'"
-          :label="'Email'"
-          :name="'email'"
+          type="email"
+          label="Email"
+          name="email"
           :hasError="errors.has('email')"
-          v-validate="validations.email"
-        />
+          v-validate="'required|email'">
+          <span
+            class="error"
+            v-if="errors.has('email')">
+              {{ errors.first('email') }}
+          </span>
+        </mat-input>
         <mat-input
           v-model="employee.phoneNumber"
           :inputWrapper="{s6: true}"
-          :type="'text'"
-          :label="'Telefonszám'"
-          :name="'phoneNumber'"
-          v-validate="validations.phone">
+          label="Telefonszám"
+          name="phoneNumber"
+          :hasError="errors.has('phoneNumber')"
+          v-validate="validations.name">
           <span
             class="error"
             v-if="errors.has('phoneNumber')">
@@ -44,34 +59,41 @@
         </mat-input>
         <mat-input
           v-if="!editing"
-          v-model="employee.password"
+          v-model.trim="employee.password"
           :inputWrapper="{s12: true}"
-          :type="'password'"
-          :label="'Jelszó'"
-          :name="'password'"
-        />
+          type="password"
+          label="Jelszó"
+          name="password"
+          :hasError="errors.has('password')"
+          v-validate="validations.password">
+           <span
+            class="error"
+            v-if="errors.has('password')">
+              {{ errors.first('password') }}
+          </span>
+        </mat-input>
         <mat-select
           v-model="employee.authority"
           :inputWrapper="{s12: true}"
           :options="selectOptions"
-          :name="'userRole'"
-          :label="'Felhasználó tipusa'"
-        />
+          name="userRole"
+          v-validate="'required'"
+          label="Felhasználó tipusa"/>
         <mat-radio-button
-          :id="'userType'"
+          id="userType"
           v-model="employee.student"
           :inline="true"
           :buttons="radioOption"
-          :name="'hoho'"
-        />
+          v-validate="'required'"
+          name="userType"/>
         <mat-date-picker
           :disabled="editing"
           :inputWrapper="{s12: true}"
-          :id="'datepicker'"
-          :label="'Születési Dátum'"
+          id="datepicker"
+          name="birthdate"
+          label="Születési Dátum"
           v-model="employee.birthdate"
-          v-validate="'required'"
-        />
+          v-validate="'required'"/>
         <p class="right-align col s12">
           <button
             type="button"
@@ -86,7 +108,6 @@
             :disabled="isFormValid">
             Munkavállaló mentése
           </button>
-
         </p>
       </form>
     </div>
@@ -98,7 +119,6 @@ import MatSelect from '../../shared/forms/MaterialSelect'
 import MatRadioButton from '../../shared/forms/MaterialRadioButton'
 import MatDatePicker from '../../shared/forms/MatDatepicker'
 import ErrorAlert from '../../shared/ErrorAlert'
-import UserResource from '../../../resources/UserResource.js'
 
 export default {
   data () {
@@ -114,6 +134,9 @@ export default {
         phone: {
           required: true
           // regex: /^\+[0-9]{1}[0-9]{10,11}$/
+        },
+        password: {
+          required: true
         }
       },
       employee: {
@@ -159,22 +182,11 @@ export default {
   },
   methods: {
     onSubmitEmployee () {
-      console.log(UserResource.userRequestBody(this.employee))
-      let body = {
-        lastname: this.employee.lastname,
-        firstname: this.employee.firstname,
-        email: this.employee.email,
-        authority: this.employee.authority,
-        student: this.employee.student,
-        phoneNumber: this.employee.phoneNumber,
-        birthdate: this.employee.birthdate
-      }
       if (this.editing) {
-        body.id = this.employee.id
-        this.$store.dispatch('updateUser', body)
+        this.$store.dispatch('updateUser', this.employee)
       } else {
-        body.password = this.employee.password
-        this.$store.dispatch('addUser', body)
+        this.employee.phonenumber = this.employee.phoneNumber
+        this.$store.dispatch('addUser', this.employee)
       }
     },
     closeModal () {
