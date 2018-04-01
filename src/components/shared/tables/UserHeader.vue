@@ -2,7 +2,7 @@
   <th @click="onSetOrder" class="order-controller">
     <slot></slot>
     <div class="order-icon-wrapper">
-      <i class="small material-icons controll" v-if="order">{{ icon }}</i>
+      <i class="small material-icons controll" v-if="isActive">{{ icon }}</i>
     </div>
   </th>
 </template>
@@ -12,21 +12,35 @@ export default {
     return {
       show: false,
       icon: 'arrow_drop_down',
-      order: null
+      order: 'asc'
+    }
+  },
+  props: {
+    sortProp: {
+      type: String,
+      required: true
+    },
+    activeProp: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    isActive () {
+      return this.sortProp === this.activeProp
     }
   },
   methods: {
     onSetOrder () {
-      if (this.order === null) {
+      if (this.order === 'asc') {
         this.order = 'desc'
         this.icon = 'arrow_drop_down'
       } else if (this.order === 'desc') {
         this.order = 'asc'
         this.icon = 'arrow_drop_up'
-      } else {
-        this.order = null
       }
-      this.$emit('orderChanged', this.order)
+      const eventPayload = { order: this.order, sortProp: this.sortProp }
+      this.$emit('orderChanged', eventPayload)
     }
   }
 }

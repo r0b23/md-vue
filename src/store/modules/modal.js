@@ -6,7 +6,9 @@ const state = {
   modalHeader: '',
   showFooter: false,
   model: null,
-  editing: false
+  editing: false,
+  size: '',
+  action: null
 }
 
 const mutations = {
@@ -20,6 +22,8 @@ const mutations = {
     state.model = { ...payload.model }
     state.showFooter = payload.showFooter
     state.editing = payload.editing
+    state.size = payload.size
+    state.action = payload.action
   }
 }
 const getters = {
@@ -40,6 +44,12 @@ const getters = {
   },
   editing (state) {
     return state.editing
+  },
+  size (state) {
+    return state.size
+  },
+  action (state) {
+    return state.action
   }
 }
 export default {

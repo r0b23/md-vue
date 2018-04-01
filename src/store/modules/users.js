@@ -76,6 +76,7 @@ const actions = {
           }
           commit('openPopup', payload)
           commit('SET_USERS', populatedUsers)
+          commit('closeModal')
         })
       }).catch(error => console.log(error))
   },
@@ -84,6 +85,13 @@ const actions = {
     userResource.updateUser(user).then(response => response.json())
       .then(updatedUser => {
         userResource.populateUser(updatedUser.id).then(populatedUser => {
+          const payload = {
+            showPopup: true,
+            title: 'Felhasználó módosítva.',
+            isError: false,
+            message: ``
+          }
+          commit('openPopup', payload)
           commit('UPDATE_USER', user)
           commit('closeModal')
         })

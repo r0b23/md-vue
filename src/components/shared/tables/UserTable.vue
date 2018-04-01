@@ -25,11 +25,25 @@
         <thead>
           <tr>
             <th>#</th>
-            <table-header @orderChanged="setOrder($event, 'lastname', 'string')">Név</table-header>
-            <table-header @orderChanged="setOrder($event, 'birthdate', 'date')">Születési dátum</table-header>
+            <table-header
+              :sortProp="'lastname'"
+              :activeProp="activeProp"
+              @orderChanged="setOrder($event, 'lastname', 'string')">
+              Név
+            </table-header>
+            <table-header
+              :sortProp="'birthdate'"
+              :activeProp="activeProp"
+              @orderChanged="setOrder($event, 'birthdate', 'date')">
+              Születési dátum
+            </table-header>
             <th>Elérhetőségek</th>
             <th>Munkahely</th>
-            <table-header>Orvosi</table-header>
+            <table-header
+              :sortProp="'orvosi'"
+              :activeProp="activeProp">
+              Orvosi
+            </table-header>
             <th></th>
           </tr>
         </thead>
@@ -68,7 +82,7 @@ import MatInput from '../forms/MatInput'
 import MatSelect from '../forms/MaterialSelect'
 import MatPagination from '../Pagination'
 import TableHeader from './UserHeader'
-// user/remove remove_circle_outline
+
 export default {
   data () {
     return {
@@ -86,7 +100,8 @@ export default {
         { value: 50, displayValue: '50 bejegyzés' },
         { value: 100, displayValue: '100 bejegyzés' }
       ],
-      sortFunction: null
+      sortFunction: null,
+      activeProp: ''
     }
   },
   computed: {
@@ -124,15 +139,8 @@ export default {
       const filter = this.filter.toUpperCase()
       if (filter) {
         return users.filter(user => {
-          const searchableUser = Object.values({
-            // You should add fullname to the model when fetching the users from the server
-            fullname: `${user.lastname} ${user.firstname}`,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            birthdate: user.birthdate,
-            lastname: user.lastname,
-            firstname: user.firstname
-          }).join('')
+          const { id, projects, student, ...userValues } = user
+          const searchableUser = Object.values(userValues).join('')
           return searchableUser.toUpperCase().indexOf(filter) !== -1
         })
       }
@@ -154,16 +162,18 @@ export default {
     setOrder (event, prop, type) {
       if (event === null) {
         this.sortFunction = null
+        this.activeProp = ''
         return null
       } else {
+        this.activeProp = event.sortProp
         if (type === 'string') {
           this.sortFunction = function (a, b) {
             const A = a[prop].toUpperCase()
             const B = b[prop].toUpperCase()
             if (A < B) {
-              return event === 'asc' ? -1 : 1
+              return event.order === 'asc' ? -1 : 1
             } else if (A > B) {
-              return event === 'asc' ? 1 : -1
+              return event.order === 'asc' ? 1 : -1
             }
             return 0
           }
@@ -172,9 +182,9 @@ export default {
             const dateA = moment(a[prop])
             const dateB = moment(b[prop])
             if (dateA.isAfter(dateB)) {
-              return event === 'desc' ? -1 : 1
+              return event.order === 'desc' ? -1 : 1
             } else if (dateA.isBefore(dateB)) {
-              return event === 'desc' ? 1 : -1
+              return event.order === 'desc' ? 1 : -1
             }
             return 0
           }

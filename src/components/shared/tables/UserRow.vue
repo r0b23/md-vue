@@ -88,7 +88,15 @@ export default {
       this.$store.commit('openModal', payload)
     },
     removeUser (userId) {
-      this.$store.dispatch('removeUser', userId)
+      const payload = {
+        component: 'confirmMessage',
+        showFooter: true,
+        size: 'small',
+        action () {
+          this.$store.dispatch('removeUser', userId)
+        }
+      }
+      this.$store.commit('openModal', payload)
     }
   },
   components: {
