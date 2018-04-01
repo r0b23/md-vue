@@ -1,5 +1,5 @@
 <template>
-  <ul id="slide-out" class="side-nav">
+  <ul id="slide-out" class="sidenav">
     <sidebar-user/>
     <li>
       <router-link to="/munkavallalok">
@@ -40,21 +40,21 @@ export default {
 }
 </script>
 <style>
-  .side-nav {
+  .sidenav {
     transform: initial;
     top: 64px;
     background: #fff;
     width: 240px;
   }
-  .side-nav li>a, .side-nav .subheader, .side-nav li>a>i.material-icons {
+  .sidenav li>a, .sidenav .subheader, .sidenav li>a>i.material-icons {
     color: #444;
     font-size: 18px;
   }
-  .side-nav li>a>i.material-icons {
+  .sidenav li>a>i.material-icons {
     margin: 0 5px 0 0;
     color: #444;
   }
-  .side-nav li>a {
+  .sidenav li>a {
     display: block;
     padding: 0 15px;
     color: #444;

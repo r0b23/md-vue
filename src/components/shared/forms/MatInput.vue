@@ -6,7 +6,6 @@
       v-if="icon">{{ icon }}</i>
     <input
       :type="type"
-      class="validate"
       :class="{ 'invalid': hasError, 'valid': !hasError && !!value }"
       :value="value"
       @input="updateValue($event.target.value)"
@@ -14,7 +13,7 @@
       @focus="inputIsActive"
       @blur="inputNotActive"
       :disabled="disabled"
-      :id="id || name"
+      :id="id"
       :name="name"
       :required="required">
     <label
@@ -79,11 +78,13 @@ export default {
       type: String,
       required: true
     },
-    id: {
-      type: String
-    },
     hasError: {
       type: Boolean
+    }
+  },
+  computed: {
+    id () {
+      return this.name
     }
   },
   methods: {

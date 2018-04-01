@@ -1,23 +1,21 @@
 <template>
   <div class="modal-wrapper">
-    <!-- <transition
-      name="fadeIn"
-      @enter="enterFadeIn"
-      @leave="leaveFadeIn">
-    </transition> -->
-      <div class="material modal-overlay" @click="closeModal"></div>
+    <div class="material modal-overlay" @click="closeModal"></div>
     <transition
       name="scale-in"
       @enter="enterScaleIn"
       @leave="leaveScaleIn">
       <div id="modal1" class="modal" v-if="open"
-        :class="{ 'modal-fixed-footer': showFooter }">
+        :class="modalClasses">
         <div class="modal-content">
           <h4>{{ header }}</h4>
           <component :is="componentId"></component>
         </div>
         <div class="modal-footer" v-if="showFooter">
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+          <a
+            class="modal-action modal-close waves-effect waves-green btn-flat" @click="executeAction">Igen</a>
+          <a
+            class="modal-action modal-close waves-effect waves-red btn-flat" @click="closeModal">Mégse</a>
         </div>
       </div>
     </transition>
@@ -28,6 +26,7 @@
     ["error", { "props": true, "ignorePropertyModificationsFor": ["el"] }] */
 import Velocity from 'velocity-animate'
 import EmployeeInfoForm from './ModalComponents/EmployeeInfoForm'
+import ConfirmMessage from './ModalComponents/Confirm'
 
 export default {
   computed: {
@@ -42,6 +41,19 @@ export default {
     },
     showFooter () {
       return this.$store.getters.showFooter
+    },
+    size () {
+      return this.$store.getters.size
+    },
+    modalClasses () {
+      const size = this.size ? this.size : 'medium'
+      return {
+        'modal-fixed-footer': this.showFooter,
+        [size]: true
+      }
+    },
+    action () {
+      return this.$store.getters.action
     }
   },
   methods: {
@@ -82,10 +94,14 @@ export default {
     closeModal () {
       this.$store.commit('closeModal')
       this.$store.commit('RESET_ERROR')
+    },
+    executeAction () {
+      this.action()
     }
   },
   components: {
-    employeeInfoForm: EmployeeInfoForm
+    employeeInfoForm: EmployeeInfoForm,
+    confirmMessage: ConfirmMessage
   }
 }
 </script>
@@ -110,7 +126,11 @@ export default {
     height: 86vh;
     background-color: #fff;
     max-height: initial;
-}
+  }
+  .modal-wrapper .small.modal {
+    height: 31vh;
+    width: 25%;
+  }
   .material.modal-overlay {
     display: block;
     opacity: 0.5;

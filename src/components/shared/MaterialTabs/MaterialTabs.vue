@@ -77,4 +77,7 @@ export default {
   .card-panel.tabs-wrapper {
     padding: 0;
   }
+  .card-panel.tabs-wrapper .col {
+    padding: 0;
+  }
 </style>

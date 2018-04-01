@@ -91,6 +91,9 @@ export default {
     color: #212121;
     background-color: #F5F5F5;
   }
+  button, input, optgroup, select, textarea {
+    font-family: Raleway;
+  }
   .main.container {
     margin-left: 12.7%;
     width: 87.3%;

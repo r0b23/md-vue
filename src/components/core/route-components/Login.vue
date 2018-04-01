@@ -9,9 +9,9 @@
               v-model="username"
               :inputWrapper="{s12: true}"
               :icon="'email'"
-              :type="'email'"
-              :label="'Email'"
-              :name="'email'"
+              type="email"
+              label="Email"
+              name="email"
               :hasError="errors.has('email')"
               v-validate="validations.userName"
               data-vv-delay="1500">
@@ -22,13 +22,12 @@
               </span>
             </mat-input>
             <mat-input
-              :label="'Jelszó'"
-              :id="'password'"
-              :icon="'lock'"
+              label="Jelszó"
+              icon="lock"
               :inputWrapper="{s12: true}"
-              :type="'password'"
+              type="password"
               v-model="password"
-              :name="'password'"
+              name="password"
               :hasError="errors.has('password')"
               v-validate="validations.password">
               <span
@@ -123,7 +122,7 @@ export default {
     z-index: 10000;
   }
   .flex-item {
-    margin-top: -12em;
+    _margin-top: -12em;
   }
   .row .col.s12#loginForm {
     max-width: 450px;

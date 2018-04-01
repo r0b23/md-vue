@@ -5,17 +5,17 @@
           <span
             v-for="(button, index) in buttons"
             :key="index">
-            <input
-              class="with-gap"
-              :name="name"
-              :checked="value == button.value"
-              type="radio"
-              :id="`${id}${index}`"/>
             <label
               class="material-radio-button-label"
               @click="inputValue(button.value)"
               :for="`${id}${index}`">
-              {{ button.displayValue }}
+              <input
+                class="with-gap"
+                :name="name"
+                :checked="value == button.value"
+                type="radio"
+                :id="`${id}${index}`"/>
+              <span>{{ button.displayValue }}</span>
             </label>
           </span>
         </p>
@@ -24,17 +24,17 @@
         <p
           v-for="(button, index) in buttons"
           :key="index">
-          <input
-            class="with-gap"
-            :name="name"
-            :checked="value == button.value"
-            type="radio"
-            :id="`${id}${index}`"/>
           <label
             class="material-radio-button-label"
             @click="inputValue(button.value)"
             :for="`${id}${index}`">
-            {{ button.displayValue }}
+            <input
+              class="with-gap"
+              :name="name"
+              :checked="value == button.value"
+              type="radio"
+              :id="`${id}${index}`"/>
+              <span>{{ button.displayValue }}</span>
           </label>
         </p>
       </div>
