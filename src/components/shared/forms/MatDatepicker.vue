@@ -96,10 +96,7 @@ export default {
       counter: 1,
       lmCounter: 0,
       year: null,
-      month: null,
-      monthOptions: [
-        { value: 0, displayValue: 'Január' }
-      ]
+      month: null
     }
   },
   computed: {

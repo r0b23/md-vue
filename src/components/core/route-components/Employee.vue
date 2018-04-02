@@ -46,19 +46,21 @@
         </p>
       </div>
     </card-reavel>
-    <div class="row">
-      <div class="col s12">
-        <pre >
-          {{ user }}
-        </pre>
-      </div>
+    <div class="col s6">
+      <calendar-view :title="'Ráérés'"/>
     </div>
-   </div>
+    <div class="col s6">
+      <pre >
+        {{ user }}
+      </pre>
+    </div>
+  </div>
 </template>
 <script>
-import CardReavel from '../../shared/MaterialCardReaveal'
 import moment from 'moment'
+import CardReavel from '../../shared/MaterialCardReaveal'
 import UserResource from '../../../resources/UserResource'
+import CalendarView from '../../shared/calendar/Calendar'
 
 export default {
   data () {
@@ -79,7 +81,8 @@ export default {
     })
   },
   components: {
-    cardReavel: CardReavel
+    cardReavel: CardReavel,
+    calendarView: CalendarView
   }
 }
 </script>

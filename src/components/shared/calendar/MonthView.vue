@@ -2,9 +2,9 @@
   <div class="wrapper">
     <div class="month">
       <div class="calendar-header">
-        <i class="large material-icons navigation before" @click="lastMonth()">navigate_before</i>
-        <h1>{{ year }} {{ monthToString }}</h1>
-        <i class="large material-icons navigation next" @click="nextMonth()">navigate_next</i>
+        <i class="material-icons navigation before" @click="lastMonth()">navigate_before</i>
+        <h5>{{ year }} {{ monthToString }}</h5>
+        <i class="material-icons navigation next" @click="nextMonth()">navigate_next</i>
       </div>
       <div class="day-header">
         <div class="day">Hé</div>
@@ -15,87 +15,58 @@
         <div class="day">Szo</div>
         <div class="day">Va</div>
       </div>
-      <transition
-        mode="in-out"
-        :css="false"
-        name="fadeIn"
-        @enter="enter"
-        @leave="leave">
-        <div class="days" v-if="changeMonth">
-          <template v-if="lastMonthLastDays !== 0">
-            <div class="last-month day"
-              v-for="(lmCounter, index) in lastMonthLastDays"
-              :key="`lm${index}`">
-                <p class="header">
-                  {{ (startofLastWeekOfLastMonth + lmCounter) }}
-                </p>
-                <div class="events">
-                </div>
-            </div>
-          </template>
-          <div class="day" v-for="(Counter) in daysOfTheMonth" :key="`tm${Counter}`">
-            <p class="header">
-              <span>{{Counter}}</span>
-            </p>
-            <div class="events">
-              <p style="color:green" :class="{ red: Counter % 7 == 0 }"></p>
-              <template v-if="test[Counter]">
-                <div class="event ellipsis">
-                  <span class="new badge">{{ test[Counter].duration }}ó:  {{ test[Counter].title }}</span>
-                </div>
-              </template>
-            </div>
+      <div class="days" >
+        <template v-if="lastMonthLastDays !== 0">
+          <div class="last-month day"
+            v-for="(lmCounter, index) in lastMonthLastDays"
+            :key="`lm${index}`">
           </div>
-          <template v-if="nextMonthFirstDays">
-            <div class="next-month day"
-              v-for="(Counter, index) in nextMonthFirstDays"
-              :key="`nm${index}`">
-                <p class="header">
-                  <span>{{Counter}}</span>
-                </p>
-                <div class="events">
-                  <span></span>
-                </div>
-            </div>
-          </template>
+        </template>
+        <div class="day" v-for="(Counter) in daysOfTheMonth" :key="`tm${Counter}`">
+          <p class="header teal lighten-2">
+            <span>{{Counter}}</span>
+          </p>
+          <div class="events">
+            <span class="new badge orange">
+              5:40 - Sulihost
+            </span>
+          </div>
         </div>
-      </transition>
+        <template v-if="nextMonthFirstDays">
+          <div class="next-month day"
+            v-for="(Counter, index) in nextMonthFirstDays"
+            :key="`nm${index}`">
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import Velocity from 'velocity-animate'
+import moment from 'moment'
 
 export default {
   data () {
     return {
-      today: new Date(),
+      today: moment(),
       Counter: 1,
       lmCounter: 0,
-      year: new Date().getFullYear(),
-      month: new Date().getMonth(),
-      changeMonth: true,
-      token: '',
-      test: {
-        21: {
-          title: 'Munka',
-          duration: 8
-        }
-      }
+      year: moment().get('year'),
+      month: moment().get('month')
     }
   },
   computed: {
     thisMonth () {
-      return new Date(this.year, this.month)
+      return moment({ 'year': this.year, 'month': this.month })
     },
     daysOfTheMonth () {
-      return this.numberOfDaysOfMonth(this.thisMonth.getMonth())
+      return this.numberOfDaysOfMonth(this.thisMonth.get('month'))
     },
     daysOfThelastMonth () {
-      if (this.thisMonth.getMonth() === 0) {
+      if (this.thisMonth.get('month') === 0) {
         return this.numberOfDaysOfMonth(11)
       } else {
-        return this.numberOfDaysOfMonth(this.thisMonth.getMonth() - 1)
+        return this.numberOfDaysOfMonth(this.thisMonth.get('month') - 1)
       }
     },
     startofLastWeekOfLastMonth () {
@@ -103,7 +74,7 @@ export default {
     },
     firstDayOfTheMonth () {
       // Sunday is 0, so we need to change it to 7
-      return this.thisMonth.getDay() === 0 ? 7 : this.thisMonth.getDay()
+      return this.thisMonth.get('day') === 0 ? 7 : this.thisMonth.get('day')
     },
     lastMonthLastDays () {
       return this.firstDayOfTheMonth - 1
@@ -143,21 +114,6 @@ export default {
     }
   },
   methods: {
-    getAll () {
-      console.log(this.token)
-      const myInit = {
-        method: 'GET',
-        headers: new Headers({
-          credentials: 'include',
-          'Authorization': `Bearer ${this.token}`
-        }),
-        mode: 'cors'
-      }
-      fetch('http://localhost:8080/user/authenticate', myInit).then(response => response.json())
-        .then(data => {
-          console.log(data)
-        })
-    },
     numberOfDaysOfMonth (month) {
       switch (month) {
         case 1:
@@ -183,102 +139,32 @@ export default {
       }
     },
     nextMonth () {
-      this.changeMonth = false
-      console.log('hi')
       if (this.month === 11) {
         this.month = 0
         this.year = this.year + 1
       } else {
         this.month = this.month + 1
       }
-      this.changeMonth = true
     },
     lastMonth () {
-      this.changeMonth = false
       if (this.month === 0) {
         this.month = 11
         this.year--
       } else {
         this.month--
       }
-      this.changeMonth = true
-    },
-    enter (el, done) {
-      Velocity(el, 'fadeIn', { duration: 300, complete: done })
-    },
-    leave (el, done) {
-      Velocity(el, 'fadeOut', { duration: 300, complete: done })
     }
   }
 }
 </script>
 
 <style>
-  .calendar-header {
-    position: relative;
-    align-items: center
-  }
-  .navigation {
-    position: absolute;
-    cursor: pointer;
-  }
-  .navigation.before {
-    left: 0;
-  }
-  .navigation.next {
-    right: 0;
-  }
-  .month  {
-    width: 770px;
+  .month.card-panel.col  {
     margin: auto;
+    padding-bottom: 2em;
   }
-  .month div:not(.day) {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    background-color: #f9f9f9;
-  }
-  .wrapper .day-header {
-    border-bottom: 1px solid #d0d0d0;
-    margin-bottom: 5px;
-  }
-  .wrapper .day-header .day {
-    width: calc(100% / 7);
-    text-align: center;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    line-height: 1.5;
-  }
-  .month .days .day {
-    background-color: transparent;
-    width: calc(100% / 7);
-    height: 100px;
-    line-height: 1.5;
-  }
-  .month .days .day p.header {
-    text-align: right;
-    border-bottom: 1px solid #ddd;
-    margin: 0;
-    padding-top: 2px;
-    padding-bottom: 2px;
-  }
-  .last-month.day, .next-month.day {
+  .month .days .last-month.day, .month .days .next-month.day {
     opacity: .3;
+    border: none;
   }
-  .ellipsis {
-    /* height: 1.5em; */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  span.badge.new {
-    width: 100%;
-    padding: 0;
-    margin-left: 0;
-  }
-  span.badge.new:after {
-    display:none;
-  }
-
 </style>
